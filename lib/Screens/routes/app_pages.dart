@@ -1,4 +1,5 @@
 import 'package:flutter_application_1/Screens/login_screen_todo_list/login_screen_todo_list_view.dart';
+import 'package:flutter_application_1/Screens/register_todo_list/register_todo_list_view.dart';
 import 'package:get/get.dart';
 
 import 'app_routes.dart';
@@ -9,6 +10,11 @@ class AppPages {
       name: AppRoutes.login,
       page: () => LoginScreenTodoListView(),
       binding: LoginScreenTodoListViewBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.register,
+      page: () => RegisterTodoListView(),
+      binding: RegisterTodoListViewBinding(),
     ),
   ];
 }
