@@ -3,7 +3,6 @@ import 'package:flutter_application_1/widgets/textFields/custom_textFields.dart'
 import 'package:get/get.dart';
 
 part 'login_screen_todo_list_binding.dart';
-part 'login_screen_todo_list_controller.dart';
 
 class LoginScreenTodoListView
     extends GetView<LoginScreenTodoListViewController> {
@@ -28,7 +27,7 @@ class LoginScreenTodoListView
               controller: controller.passCtrl,
               hintText: "Enter Password ...",
               prefix: Icons.password_sharp,
-              suffix: Icons.hide_image,
+              suffix: Icons.visibility,
             ),
             SizedBox(height: 20),
             GestureDetector(
