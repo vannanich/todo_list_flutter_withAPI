@@ -1,32 +1,34 @@
-part of 'login_screen_view.dart';
+part of 'login_screen_todo_list_view.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/api/auth_service.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-
-class LoginScreenController extends GetxController {
+class LoginScreenTodoListViewController extends GetxController {
   var emailCtrl = TextEditingController();
-  var passwordCtrl = TextEditingController();
+  var passCtrl = TextEditingController();
 
   var authService = AuthService();
   var isLoading = false.obs;
+  var box = GetStorage();
 
   void login() async {
     try {
+      isLoading.value = true;
       var response = await authService.loginService(
         email: emailCtrl.text,
-        password: passwordCtrl.text,
+        password: passCtrl.text,
       );
+
       if (response["result"] == true) {
         Get.snackbar("Success", "Login success");
+        isLoading.value = false;
+        Get.offAllNamed(AppRoutes.home);
+        debugPrint("Token : ${response["data"]["token"]}");
+        box.write("token", response["data"]["token"]);
       } else {
         Get.snackbar("Failed", "Login Failed");
+        isLoading.value = false;
       }
-    } catch (e) {
+    } catch (error) {
       Get.snackbar("Failed", "Login Failed");
+      isLoading.value = false;
     }
   }
 }

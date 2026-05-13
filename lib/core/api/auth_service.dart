@@ -1,4 +1,37 @@
-import 'package:flutter_application_1/core/api/base_api_service.dart';
+// import 'package:dio_todo_llist/core/api/base_api_service.dart';
+
+// class AuthService {
+//   final BaseApiService baseApi = BaseApiService();
+
+//   Future<Map<String, dynamic>> loginService({
+//     required String email,
+//     required String password,
+//   }) async {
+//     var response = await baseApi.post(
+//       endpoint: "/api/auth/login",
+//       data: {"email": email, "password": password},
+//     );
+//     return response;
+//   }
+
+//   Future<Map<String, dynamic>> registerService({
+//     required String name,
+//     required String email,
+//     required String password,
+//   }) async {
+//     var respone = await baseApi.post(
+//       endpoint: "/api/auth/register",
+//       data: {"name": name, "email": email, "password": password},
+//     );
+//     return respone;
+//   }
+
+//   Future<Map<String, dynamic>> fixProfile() async {
+//     var respone = await baseApi.get(endpoint: "api/profile/me");
+//     return respone;
+//   }
+// }
+import 'package:dio_todo_llist/core/api/base_api_service.dart';
 
 class AuthService {
   final BaseApiService baseApi = BaseApiService();
@@ -11,6 +44,23 @@ class AuthService {
       endpoint: "/api/auth/login",
       data: {"email": email, "password": password},
     );
+    return response;
+  }
+
+  Future<Map<String, dynamic>> registerService({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    var response = await baseApi.post(
+      endpoint: "/api/auth/register",
+      data: {"name": name, "email": email, "password": password},
+    );
+    return response;
+  }
+
+  Future<Map<String, dynamic>> fixProfile() async {
+    var response = await baseApi.get(endpoint: "api/profile/me");
     return response;
   }
 }

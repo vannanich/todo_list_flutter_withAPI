@@ -1,17 +1,19 @@
-name: flutter_application_1
+name: dio_todo_llist
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.11.5
+  sdk: ^3.11.4
 
 dependencies:
   dio: ^5.9.2
   flutter:
     sdk: flutter
   get: ^4.7.3
+  get_storage: ^2.1.1
   pretty_dio_logger: ^1.4.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

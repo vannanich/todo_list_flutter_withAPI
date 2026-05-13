@@ -17,6 +17,7 @@ class custom_textfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: Icon(prefix),
