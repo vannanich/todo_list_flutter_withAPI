@@ -19,23 +19,23 @@ class RegisterTodoListView extends GetView<RegisterTodoListViewController> {
         child: Column(
           mainAxisAlignment: .center,
           children: [
-            custom_textfield(
+            CustomTextField(
               controller: controller.refnCtrl,
               hintText: "Enter Full name",
-              prefix: Icons.people,
+              // prefix: Icons.people,
             ),
             SizedBox(height: 20),
-            custom_textfield(
+            CustomTextField(
               controller: controller.reEmailCtrl,
               hintText: "Enter Email...",
-              prefix: Icons.email,
+              // prefix: Icons.email,
             ),
             SizedBox(height: 20),
-            custom_textfield(
+            CustomTextField(
               controller: controller.rePassCtrl,
               hintText: "Enter Password ...",
-              prefix: Icons.password_sharp,
-              suffix: Icons.visibility,
+              // prefix: Icons.password_sharp,
+              // suffix: Icons.visibility,
             ),
 
             SizedBox(height: 20),

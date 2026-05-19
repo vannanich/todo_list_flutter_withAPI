@@ -31,7 +31,7 @@
 //     return respone;
 //   }
 // }
-import 'package:dio_todo_llist/core/api/base_api_service.dart';
+import 'package:dio_todo_llist/core/api/services/base_api_service.dart';
 
 class AuthService {
   final BaseApiService baseApi = BaseApiService();

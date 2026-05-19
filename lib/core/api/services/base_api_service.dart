@@ -48,7 +48,7 @@ class BaseApiService {
       return response.data;
     } on DioException catch (e) {
       debugPrint("error: ${e.message}");
-      return {}; // 👈 return empty map instead of null
+      return {}; 
     }
   }
 
@@ -71,6 +71,26 @@ class BaseApiService {
     } on DioException catch (e) {
       debugPrint("Error: ${e.message}");
       return {}; 
+    }
+  }
+  Future<dynamic> delete({required String endpoint}) async {
+    try {
+      var response = await apiConfig.dio.delete(endpoint);
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Error ${e.toString()}");
+    }
+  }
+
+  Future<dynamic> put({
+    required String endpoint,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var response = await ApiConfig().dio.put(endpoint, data: data);
+      return response.data;
+    } on DioException catch (e) {
+      debugPrint("Error : ${e.message}");
     }
   }
 }

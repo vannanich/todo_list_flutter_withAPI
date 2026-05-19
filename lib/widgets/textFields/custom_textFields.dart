@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 
-class custom_textfield extends StatelessWidget {
+class CustomTextField extends StatelessWidget {
   final String hintText;
-  final IconData prefix;
   final TextEditingController controller;
-  final IconData? suffix;
-
-  const custom_textfield({
+  final bool isMultiline;
+  final FocusNode? focusNode;
+  const CustomTextField({
     super.key,
     required this.hintText,
-    required this.prefix,
     required this.controller,
-    this.suffix,
+    this.isMultiline = false,
+    this.focusNode,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      minLines: isMultiline ? 5 : 1,
+      maxLines: isMultiline ? 10 : 1,
       decoration: InputDecoration(
         hintText: hintText,
-        prefixIcon: Icon(prefix),
-        suffix: Icon(suffix),
         border: OutlineInputBorder(borderRadius: .circular(20)),
       ),
     );

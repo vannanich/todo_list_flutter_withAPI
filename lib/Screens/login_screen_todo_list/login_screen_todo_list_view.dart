@@ -11,7 +11,6 @@ part 'login_screen_todo_list_controller.dart';
 class LoginScreenTodoListView
     extends GetView<LoginScreenTodoListViewController> {
   const LoginScreenTodoListView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,17 +20,17 @@ class LoginScreenTodoListView
         child: Column(
           mainAxisAlignment: .center,
           children: [
-            custom_textfield(
+            CustomTextField(
               controller: controller.emailCtrl,
               hintText: "Enter Email...",
-              prefix: Icons.email,
-            ),
+              // prefix: Icons.email,
+              ),
             SizedBox(height: 20),
-            custom_textfield(
+            CustomTextField(
               controller: controller.passCtrl,
               hintText: "Enter Password ...",
-              prefix: Icons.password_sharp,
-              suffix: Icons.visibility,
+              // prefix: Icons.password_sharp,
+              // suffix: Icons.visibility,
             ),
             SizedBox(height: 20),
             GestureDetector(
