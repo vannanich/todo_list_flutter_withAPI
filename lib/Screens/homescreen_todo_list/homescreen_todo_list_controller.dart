@@ -1,5 +1,3 @@
-
-
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
 import 'package:dio_todo_llist/core/api/auth_service.dart';
 import 'package:dio_todo_llist/core/api/services/tasks_services.dart';
@@ -18,6 +16,9 @@ class HomescreenTodoListController extends GetxController {
   late UserModel user;
   var tasks = [].obs;
   var isLoading = false.obs;
+  var isCompleted = false.obs;
+  var isLoadTask = false.obs;
+  
 
   void getProfile() async {
     isLoading.value = true;
@@ -31,7 +32,7 @@ class HomescreenTodoListController extends GetxController {
     debugPrint(response.toString());
   }
 
-  var isLoadTask = false.obs;
+  
 
   void getTasks() async {
     isLoadTask.value = true;
@@ -82,6 +83,8 @@ class HomescreenTodoListController extends GetxController {
             },
             child: isDeleting.value?CircularProgressIndicator():Text("Yes") ,
           ),)
+
+
           // ElevatedButton(
           //   onPressed: () {
           //     deleteTask(id: id);
@@ -106,6 +109,22 @@ class HomescreenTodoListController extends GetxController {
     var formatString = DateTime.parse(date);
     var formatedDate = DateFormat("dd/MMM/yyyy").format(formatString);
     return formatedDate;
+  }
+
+  void markCompleteTask({required String id}) async {
+    try{
+      isCompleted.value = true;
+      var respone = await taskService.markCompleteTask(id: id);
+      if(respone["result"] == true) {
+        isCompleted.value = false;
+      Get.snackbar("Success", "Task Marked as Completed",);
+      // getTasks();
+    }
+    }catch(e){
+      isCompleted.value = false;
+      Get.snackbar("Failed", "something went wrong ");
+      debugPrint(" Task error : ${e.toString()}");
+    }
   }
 
   @override

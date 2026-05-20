@@ -171,15 +171,26 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                         ),
               
                       Spacer(),
-                      Container(
-                        width: 120,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
+
+
+                      GestureDetector(
+                        onTap: () {
+                          controller.markCompleteTask(id: controller.tasks[index]["id"]);
+      
+                        },
+                        child: 
+                         Container(
+                          width: 120,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: 
+                          Obx(() => Center(child:controller.isCompleted.value?CircularProgressIndicator():   Text( controller.tasks[index]["completed"]?"done":  " Marked as done",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)),
+                          )
                         ),
-                        child: Center(child: Text("Marked as done",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)),
-                      )
+                          )
                     ],
                   ),
                 ],
