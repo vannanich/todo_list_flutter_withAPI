@@ -8,17 +8,28 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class HomescreenTodoListController extends GetxController {
-  var authService = AuthService();
+   var authService = AuthService();
   var taskService = TasksServices();
   var box = GetStorage();
-  var argument = Get.arguments;
-  var isDeleting = false.obs;
+
   late UserModel user;
+
   var tasks = [].obs;
+
+  var completingTaskId = "".obs;
+
   var isLoading = false.obs;
-  var isCompleted = false.obs;
+  var isDeleting = false.obs;
   var isLoadTask = false.obs;
-  
+  var isCompleting = false.obs;
+
+  List<dynamic> get doneTaskList => tasks.where((task) {
+    return task["completed"] == true;
+  }).toList();
+
+  List<dynamic> get boardTaskList => tasks.where((task) {
+    return task["completed"] == false;
+  }).toList();
 
   void getProfile() async {
     isLoading.value = true;
@@ -32,8 +43,6 @@ class HomescreenTodoListController extends GetxController {
     debugPrint(response.toString());
   }
 
-  
-
   void getTasks() async {
     isLoadTask.value = true;
     var response = await taskService.fetchTask();
@@ -44,9 +53,8 @@ class HomescreenTodoListController extends GetxController {
     debugPrint(response.toString());
   }
 
-  void deleteTask({required String id,required int index}) async {
+  void deleteTask({required String id, required int index}) async {
     try {
-
       isDeleting.value = true;
       var response = await taskService.deleteTask(id: id);
 
@@ -75,23 +83,17 @@ class HomescreenTodoListController extends GetxController {
             },
             child: Text("No"),
           ),
-          Obx( () => ElevatedButton(
-            onPressed: () {
-              Get.back();
-              deleteTask(id: id, index: index);
-              // Get.back();
-            },
-            child: isDeleting.value?CircularProgressIndicator():Text("Yes") ,
-          ),)
-
-
-          // ElevatedButton(
-          //   onPressed: () {
-          //     deleteTask(id: id);
-          //     Get.back();
-          //   },
-          //   child: isDeleting.value?CircularProgressIndicator():Text("Yes") ,
-          // ),
+          Obx(
+            () => ElevatedButton(
+              onPressed: () {
+                Get.back();
+                deleteTask(id: id, index: index);
+              },
+              child: isDeleting.value
+                  ? CircularProgressIndicator()
+                  : Text("Yes"),
+            ),
+          ),
         ],
       ),
     );
@@ -104,26 +106,62 @@ class HomescreenTodoListController extends GetxController {
     Get.offAllNamed(AppRoutes.login);
   }
 
-  String formattedDate(String date) {
-    // convert from string to datetime
+  String formattedDateTime(String date) {
     var formatString = DateTime.parse(date);
-    var formatedDate = DateFormat("dd/MMM/yyyy").format(formatString);
-    return formatedDate;
+
+    var formattedDate = DateFormat("dd MMM, yyyy").format(formatString);
+
+    return formattedDate;
   }
 
-  void markCompleteTask({required String id}) async {
-    try{
-      isCompleted.value = true;
-      var respone = await taskService.markCompleteTask(id: id);
-      if(respone["result"] == true) {
-        isCompleted.value = false;
-      Get.snackbar("Success", "Task Marked as Completed",);
-      // getTasks();
+  void markCompleteTask({required String id, required int index}) async {
+    try {
+      isCompleting.value = true;
+      completingTaskId.value = id;
+      var response = await taskService.markCompleteTask(id: id);
+
+      if (response["result"] == true) {
+        tasks.refresh();
+        tasks[index]["completed"] = true; //update ui
+        isCompleting.value = false;
+        Get.snackbar("Success", response["messaeg"]);
+      }
+    } catch (e) {
+      tasks[index]["completed"] = false;
+      isCompleting.value = false;
+      Get.snackbar("Failed", "Something went wrong!");
+      debugPrint("Task Complete error : ${e.toString()}");
     }
-    }catch(e){
-      isCompleted.value = false;
-      Get.snackbar("Failed", "something went wrong ");
-      debugPrint(" Task error : ${e.toString()}");
+  }
+
+  void unMarkCompleteTask({required String id, required int index}) async {
+    try {
+      isCompleting.value = true;
+      completingTaskId.value = id;
+      var response = await taskService.unMarkCompleteTask(id: id);
+
+      if (response["result"] == true) {
+        tasks.refresh();
+        tasks[index]["completed"] = false; //update ui
+        isCompleting.value = false;
+
+        Get.snackbar("Success", response["messaeg"]);
+      }
+    } catch (e) {
+      tasks[index]["completed"] = true;
+      isCompleting.value = false;
+      Get.snackbar("Failed", "Something went wrong!");
+      debugPrint("Task Complete error : ${e.toString()}");
+    }
+  }
+
+  void toggleMarkComplete({required String id}) {
+    var taskIndex = tasks.indexWhere((element) => element["id"] == id);
+
+    if (tasks[taskIndex]["completed"]) {
+      unMarkCompleteTask(id: id, index: taskIndex);
+    } else {
+      markCompleteTask(id: id, index: taskIndex);
     }
   }
 

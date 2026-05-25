@@ -1,10 +1,14 @@
+import 'package:contentsize_tabbarview/contentsize_tabbarview.dart';
 import 'package:dio_todo_llist/Screens/homescreen_todo_list/homescreen_todo_list_controller.dart';
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
+import 'package:dio_todo_llist/core/api/services/tasks_services.dart';
+import 'package:dio_todo_llist/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-
 
 
 class HomeScreenView extends GetView<HomescreenTodoListController> {
@@ -13,7 +17,8 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(controller.argument != null?"update task":"Goals List"),),
+      backgroundColor: Colors.white,
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.toNamed(AppRoutes.addTask)!.then((value) {
@@ -22,23 +27,58 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
         },
         child: Icon(Icons.add),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              
-              Obx(
-                () => controller.isLoading.value
-                    ? _buildProfilePlaceholder()
-                    : _buildProfileHeader(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          controller.getTasks();
+          controller.getProfile();
+        },
+        child: DefaultTabController(
+          length: 2,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Obx(
+                      () => controller.isLoading.value
+                          ? _buildProfilePlaceholder()
+                          : _buildProfileHeader(),
+                    ),
+                  ),
+
+                  SizedBox(height: 20),
+
+                  TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+
+                    tabs: [
+                      Tab(text: "Board"),
+                      Tab(text: "Done"),
+                    ],
+                  ),
+
+                  SizedBox(height: 20),
+
+                  ContentSizeTabBarView(
+                    children: [
+                      Obx(
+                        () => controller.isLoadTask.value
+                            ? _buildTaskPlaceholder()
+                            : _buildTasksList(tasks: controller.boardTaskList),
+                      ),
+
+                      Obx(
+                        () => controller.isLoadTask.value
+                            ? _buildTaskPlaceholder()
+                            : _buildTasksList(tasks: controller.doneTaskList),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              SizedBox(height: 20,),
-              Obx(
-                () => controller.isLoadTask.value
-                    ? _buildTaskPlaceholder()
-                    : _buildTasksList(),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -46,7 +86,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
   }
 
   Widget _buildTaskPlaceholder() {
-    return ListView.separated(
+    return ListView.builder(
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
@@ -55,153 +95,180 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
           child: Container(height: 50, color: Colors.grey),
         );
       },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 10);
-      },
+
       itemCount: 2,
     );
   }
 
-    Widget _buildTasksList() {
-    return ListView.separated(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return _buildTaskCard(index: index);
-        
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: 10);
-      },
+  Widget _buildTasksList({required List<dynamic> tasks}) {
+    return tasks.isEmpty
+        ? Center(child: Text("No Task!"))
+        : ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return _taskCard(index: index, task: tasks);
+            },
+            separatorBuilder: (context, index) {
+              return SizedBox(height: 10);
+            },
 
-      itemCount: controller.tasks.length,
-      
+            itemCount: tasks.length,
+          );
+  }
+
+  Widget _taskCard({required int index, required List<dynamic> task}) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Color(0xffD9D9D9).withValues(alpha: .5),
+        borderRadius: .circular(35),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          _taskStatus(index: index, task: task),
+
+          SizedBox(height: 20),
+
+          _taskContent(index: index, task: task),
+
+          SizedBox(height: 20),
+
+          _dateNdone(index: index, task: task),
+        ],
+      ),
     );
   }
-  Widget _buildTaskCard({required int index}){
-    return Column(
+
+  Widget _dateNdone({required int index, required List<dynamic> task}) {
+    return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.blueGrey,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Center(child: Text("Nothing to do ",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)),
-                        
-                      ),
-                      Spacer(),
-                      PopupMenuButton(
-                        position: PopupMenuPosition.under,
-                        color: Colors.white,
-                        itemBuilder: (context) => [
-          
-                          PopupMenuItem(
-                            onTap: () {
-                             Get.toNamed(
-                            AppRoutes.addTask,
-                            arguments: controller.tasks[index],
-                          )!.then((value) {
-                            controller.getTasks();
-                          });
-          
-                            },
-                            child: Row(
-                              children: [
-                                Text("Edit"),
-                                SizedBox(width: 10,),
-                                Icon(Icons.edit, size: 15,),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            onTap: () {
-                             controller.onDeleteTask(
-                            id: controller.tasks[index]["id"],
-                            index: index,
-                          );
-                            },
-                            child: Row(
-                              children: [
-                                Text("Delete"),
-                                SizedBox(width: 10,),
-                                Icon(Icons.delete, size: 15,),
-                              ],
-                            ),
-                          ),
-                        ],
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Icon(Icons.more_horiz, color: Colors.black,),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  Text(controller.tasks[index]["name"],style: GoogleFonts.spaceGrotesk(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),),
-                  Text(controller.tasks[index]["description"],style: GoogleFonts.spaceGrotesk(color: Colors.white,fontSize:18),),
-                  SizedBox(height: 40,),
-                  Row(
-                    children: [
-                      Text(
-                          "Date : ${controller.formattedDate(controller.tasks[index]["created_at"])}",
-                          style: GoogleFonts.spaceGrotesk(fontSize: 15, fontWeight: .normal,color: Colors.white),
-                        ),
-              
-                      Spacer(),
+        Text(
+          "Date : ${controller.formattedDateTime(task[index]["created_at"])}",
+          style: GoogleFonts.spaceGrotesk(fontSize: 15, fontWeight: .normal),
+        ),
+        Spacer(),
 
-
-                      GestureDetector(
-                        onTap: () {
-                          controller.markCompleteTask(id: controller.tasks[index]["id"]);
-      
-                        },
-                        child: 
-                         Container(
-                          width: 120,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: 
-                          Obx(() => Center(child:controller.isCompleted.value?CircularProgressIndicator():   Text( controller.tasks[index]["completed"]?"done":  " Marked as done",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)),
-                          )
-                        ),
-                          )
-                    ],
-                  ),
-                ],
+        GestureDetector(
+          onTap: () {
+            controller.toggleMarkComplete(id: task[index]["id"]);
+          },
+          child: Obx(
+            () => Container(
+              height: 45,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: .circular(50),
               ),
-            
+              child: Center(
+                child:
+                    controller.isCompleting.value &&
+                        controller.completingTaskId == task[index]["id"]
+                    ? CircularProgressIndicator()
+                    : Text(
+                        task[index]["completed"] ? "Done" : "Mark as Done",
+                        style: GoogleFonts.spaceGrotesk(fontWeight: .bold),
+                      ),
+              ),
             ),
-            
           ),
         ),
       ],
+    );
+  }
 
+  Widget _taskContent({required int index, required List<dynamic> task}) {
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        Text(
+          task[index]["name"].toUpperCase(),
+          style: GoogleFonts.spaceGrotesk(fontSize: 25, fontWeight: .bold),
+        ),
+        Text(
+          task[index]["description"],
+          style: GoogleFonts.spaceGrotesk(fontSize: 15, fontWeight: .normal),
+        ),
+      ],
+    );
+  }
+
+  Widget _taskStatus({required int index, required List<dynamic> task}) {
+    return Row(
+      children: [
+        Container(
+          height: 45,
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: .circular(50),
+          ),
+          child: Center(
+            child: Text(
+              "Hight Priority",
+              style: GoogleFonts.spaceGrotesk(fontWeight: .bold),
+            ),
+          ),
+        ),
+        Spacer(),
+        PopupMenuButton(
+          position: PopupMenuPosition.under,
+          color: Colors.white,
+
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                onTap: () {
+                  Get.toNamed(AppRoutes.addTask, arguments: task[index])!.then((
+                    value,
+                  ) {
+                    controller.getTasks();
+                  });
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.edit),
+                    SizedBox(width: 10),
+                    Text(
+                      "Update",
+                      style: GoogleFonts.spaceGrotesk(
+                        color: Colors.black,
+                        fontWeight: .bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                onTap: () {
+                  controller.onDeleteTask(id: task[index]["id"], index: index);
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: Colors.red),
+                    SizedBox(width: 10),
+                    Text(
+                      "Delete",
+                      style: GoogleFonts.spaceGrotesk(
+                        color: Colors.red,
+                        fontWeight: .bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ];
+          },
+          child: Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(color: Colors.white, shape: .circle),
+            child: Icon(Icons.more_horiz),
+          ),
+        ),
+      ],
     );
   }
 
@@ -214,7 +281,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
         ),
         SizedBox(width: 10),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(
               controller.user.name,
@@ -241,7 +308,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
         ),
         SizedBox(width: 10),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Shimmer.fromColors(
               baseColor: Colors.grey.shade200,
@@ -259,5 +326,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
       ],
     );
   }
-  
 }
+
+
