@@ -4,6 +4,7 @@ class RegisterTodoListViewController extends GetxController {
   var refnCtrl = TextEditingController();
   var reEmailCtrl = TextEditingController();
   var rePassCtrl = TextEditingController();
+  var reConfirmPassCtrl = TextEditingController();
   var isLoading = false.obs;
   var authService = AuthService();
 

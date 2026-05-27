@@ -1,7 +1,8 @@
 import 'package:dio_todo_llist/Screens/routes/app_pages.dart';
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
@@ -41,7 +42,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,    
-      initialRoute: token != null ? AppRoutes.home : AppRoutes.login,
+      initialRoute: token != null ? AppRoutes.login : AppRoutes.login,
       getPages: AppPages.routes,
     );
   }

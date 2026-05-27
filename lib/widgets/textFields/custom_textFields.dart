@@ -20,8 +20,14 @@ class CustomTextField extends StatelessWidget {
       minLines: isMultiline ? 5 : 1,
       maxLines: isMultiline ? 10 : 1,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200],
         hintText: hintText,
         border: OutlineInputBorder(borderRadius: .circular(20)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        )
       ),
     );
   }

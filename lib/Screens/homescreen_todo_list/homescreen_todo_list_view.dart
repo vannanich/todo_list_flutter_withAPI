@@ -1,7 +1,7 @@
 import 'package:contentsize_tabbarview/contentsize_tabbarview.dart';
-import 'package:dio_todo_llist/Screens/homescreen_todo_list/homescreen_todo_list_controller.dart';
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
-import 'package:dio_todo_llist/core/api/services/tasks_services.dart';
+import 'package:dio_todo_llist/core/api/auth_service.dart';
+import 'package:dio_todo_llist/core/api/services/tasks_services.dart' show TasksServices;
 import 'package:dio_todo_llist/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +9,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+
+
+part 'homescreen_todo_list_binding.dart';
+part 'homescreen_todo_list_controller.dart';
 
 
 class HomeScreenView extends GetView<HomescreenTodoListController> {
@@ -50,14 +54,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
 
                   SizedBox(height: 20),
 
-                  TabBar(
-                    indicatorSize: TabBarIndicatorSize.tab,
-
-                    tabs: [
-                      Tab(text: "Board"),
-                      Tab(text: "Done"),
-                    ],
-                  ),
+                  _buildTabBar(),
 
                   SizedBox(height: 20),
 
@@ -85,6 +82,63 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
+  Widget _buildTabBar() {
+    return Obx(() => 
+    TabBar(
+          onTap: (value) {
+            debugPrint("value of tab : $value");
+            controller.tabIndex.value=value;
+          },
+          labelColor: Colors.black,
+          overlayColor: WidgetStateProperty.all(Colors.grey[200]),
+          indicator: UnderlineTabIndicator(
+          borderSide: BorderSide(
+            width: 3,           // thickness
+            color: Colors.black, // color
+          ),),
+          indicatorSize: TabBarIndicatorSize.tab,
+          tabs: [
+            // tabbarItem(count: controller.boardCount, name: "Board",tabColor: controller.tabIndex.value==1 ?Colors.black:Colors.transparent ),
+            // tabbarItem(count: controller.doneCount, name: "Done",),
+
+            tabbarItem(
+              count: controller.boardTaskList.length, 
+              name: "Board",
+              tabColor: controller.tabIndex.value == 0 ? Colors.black : Colors.transparent,
+              countColor: controller.tabIndex.value == 0 ? "white" : "black",
+            ),
+            tabbarItem(
+              count: controller.doneTaskList.length,   
+              name: "Done",
+              tabColor: controller.tabIndex.value == 1 ? Colors.black : Colors.transparent,
+              countColor: controller.tabIndex.value == 1 ? "white" : "black",
+            ),
+            // Tab(text: "Board"),
+            // Tab(text: "Done"),
+          ],
+        ),
+    );
+  }
+
+  Widget tabbarItem({required int count , required String name , required Color tabColor,required String countColor}){
+    return Row(
+      mainAxisAlignment: .center,
+      children: [
+      // Text("count"),
+      // SizedBox(width: 30,),
+      // Text("Tab")
+       Container(
+        padding: .symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: .circular(20),
+          color: tabColor,
+        ),
+      child: Text(count.toString().padLeft(2,"0"),style: TextStyle(color: countColor == "white" ? Colors.white : Colors.black),)),
+      SizedBox(width: 10),
+      Text(name,style: GoogleFonts.spaceGrotesk(fontSize: 20,fontWeight: FontWeight.bold,)),     
+    ],);
+  }
+
   Widget _buildTaskPlaceholder() {
     return ListView.builder(
       shrinkWrap: true,
@@ -95,14 +149,15 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
           child: Container(height: 50, color: Colors.grey),
         );
       },
-
       itemCount: 2,
     );
   }
 
   Widget _buildTasksList({required List<dynamic> tasks}) {
     return tasks.isEmpty
-        ? Center(child: Text("No Task!"))
+        ? SizedBox(
+          // height: ,
+          child: Center(child: Text("No Task!")))
         : ListView.separated(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -112,11 +167,9 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
             separatorBuilder: (context, index) {
               return SizedBox(height: 10);
             },
-
-            itemCount: tasks.length,
-          );
+          itemCount: tasks.length,
+        );
   }
-
   Widget _taskCard({required int index, required List<dynamic> task}) {
     return Container(
       padding: EdgeInsets.all(20),

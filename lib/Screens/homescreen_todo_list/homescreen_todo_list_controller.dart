@@ -1,16 +1,14 @@
-import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
-import 'package:dio_todo_llist/core/api/auth_service.dart';
-import 'package:dio_todo_llist/core/api/services/tasks_services.dart';
-import 'package:dio_todo_llist/models/user_model.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart';
+part of 'homescreen_todo_list_view.dart';
 
 class HomescreenTodoListController extends GetxController {
    var authService = AuthService();
   var taskService = TasksServices();
   var box = GetStorage();
+
+  int get boardCount => boardTaskList.length;
+  int get doneCount => doneTaskList.length;
+
+  var tabIndex = 0.obs;
 
   late UserModel user;
 
@@ -83,8 +81,7 @@ class HomescreenTodoListController extends GetxController {
             },
             child: Text("No"),
           ),
-          Obx(
-            () => ElevatedButton(
+           ElevatedButton(
               onPressed: () {
                 Get.back();
                 deleteTask(id: id, index: index);
@@ -92,7 +89,7 @@ class HomescreenTodoListController extends GetxController {
               child: isDeleting.value
                   ? CircularProgressIndicator()
                   : Text("Yes"),
-            ),
+            
           ),
         ],
       ),
