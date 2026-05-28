@@ -6,4 +6,5 @@ abstract class AppRoutes {
   static const addTask = '/add-task';
   static const detailTask = '/detail_task';
   static const setting = '/setting';
+  static const splashScreen = '/splash_screen';
 }
