@@ -47,7 +47,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
           children: [
             SizedBox(height: 8),
 
-            // ── Big Heading ──
             Text(
               controller.argument != null ? "EDIT TASK" : "ADD TASKS",
               style: GoogleFonts.spaceGrotesk(
@@ -69,7 +68,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
             SizedBox(height: 24),
 
-            // ── Title ──
             _label("Title"),
             SizedBox(height: 8),
             CustomTextField(
@@ -80,7 +78,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
             SizedBox(height: 16),
 
-            // ── Description ──
             _label("Description"),
             SizedBox(height: 8),
             CustomTextField(
@@ -91,7 +88,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
             SizedBox(height: 16),
 
-            // ── Priority ──
             _label("Priority"),
             SizedBox(height: 8),
             Obx(
@@ -109,10 +105,8 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
             SizedBox(height: 16),
 
-            // ── Start Date + Due Date ──
             Row(
               children: [
-                // Start Date
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +123,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
                   ),
                 ),
                 SizedBox(width: 12),
-                // Due Date
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +143,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
             SizedBox(height: 32),
 
-            // ── Submit Button — KEPT EXACTLY THE SAME process ──
             GestureDetector(
               onTap: () {
                 controller.argument != null
@@ -210,7 +202,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
     );
   }
 
-  // ── Label widget ──
   Widget _label(String text) {
     return Text(
       text,
@@ -222,7 +213,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
     );
   }
 
-  // ── Dropdown field ──
   Widget _dropdownField({
     required String? value,
     required String hint,
@@ -260,7 +250,6 @@ class AddTasksView extends GetView<AddTasksViewController> {
     );
   }
 
-  // ── Date field ──
   Widget _dateField({required String value, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,

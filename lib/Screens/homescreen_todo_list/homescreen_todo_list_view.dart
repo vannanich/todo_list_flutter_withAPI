@@ -44,7 +44,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  // ── UI CHANGE: Profile row with settings icon ──
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: Obx(
@@ -54,7 +53,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                     ),
                   ),
 
-                  // ── UI CHANGE: Big greeting text ──
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
@@ -70,7 +68,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
 
                   SizedBox(height: 16),
 
-                  // ── UI CHANGE: Date + progress row ──
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Obx(() {
@@ -112,7 +109,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
 
                   SizedBox(height: 20),
 
-                  // ── UI CHANGE: Tab bar with outlined badge ──
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: _buildTabBar(),
@@ -120,7 +116,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
 
                   SizedBox(height: 16),
 
-                  // ── KEPT EXACTLY THE SAME logic, just added padding ──
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: ContentSizeTabBarView(
@@ -149,11 +144,9 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  // ── UI CHANGE: Tab bar style updated ──
   Widget _buildTabBar() {
     return Obx(
       () => TabBar(
-        // ── KEPT EXACTLY THE SAME ──
         onTap: (value) {
           debugPrint("value of tab : $value");
           controller.tabIndex.value = value;
@@ -165,7 +158,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         tabs: [
-          // ── KEPT EXACTLY THE SAME logic ──
           tabbarItem(
             count: controller.boardTaskList.length,
             name: "Tasks",
@@ -181,7 +173,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  // ── UI CHANGE: tabbarItem now uses isSelected instead of tabColor/countColor ──
   Widget tabbarItem({required int count, required String name, required bool isSelected}) {
     return Tab(
       child: Row(
@@ -215,8 +206,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
       ),
     );
   }
-
-  // ── UI CHANGE: taller shimmer card ──
   Widget _buildTaskPlaceholder() {
     return ListView.builder(
       shrinkWrap: true,
@@ -241,7 +230,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  // ── KEPT EXACTLY THE SAME logic ──
   Widget _buildTasksList({required List<dynamic> tasks}) {
     return tasks.isEmpty
         ? SizedBox(
@@ -270,10 +258,11 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
   return GestureDetector( 
     onTap: () {
       Get.toNamed(AppRoutes.detailTask, arguments: task[index])!.then((value) {
-        controller.getTasks(); // refresh after coming back
+      // Get.toNamed(AppRoutes.detailTask, arguments: task[index])!.then((value) {
+        controller.getTasks(); 
       });
     },
-    child: Container( // everything inside stays the same
+    child: Container(
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -297,7 +286,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
           _dateNdone(index: index, task: task),
         ],
       ),
-    ), // ✅ END GestureDetector
+    ), 
   );
 }
 
@@ -318,7 +307,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
             () => Container(
               padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               decoration: BoxDecoration(
-                // ── UI CHANGE: black when done, white when not ──
                 color: task[index]["completed"] ? Colors.black : Colors.white,
                 borderRadius: BorderRadius.circular(50),
                 border: Border.all(color: Colors.black12),
@@ -370,7 +358,6 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
   Widget _taskStatus({required int index, required List<dynamic> task}) {
     return Row(
       children: [
-        // ── UI CHANGE: border style priority badge ──
         Container(
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 14),
           decoration: BoxDecoration(
@@ -468,13 +455,16 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
             color: Colors.grey.shade100,
             shape: BoxShape.circle,
           ),
-          child: Icon(Icons.settings_outlined, size: 20, color: Colors.black54),
+          child:GestureDetector(
+            onTap: () {
+              Get.toNamed(AppRoutes.setting);
+            },
+            child: Image(image: AssetImage("assets/Settings.png"),width: 50,height: 30)),
         ),
       ],
     );
   }
 
-  // ── UI CHANGE: cleaner shimmer ──
   Widget _buildProfilePlaceholder() {
     return Row(
       children: [

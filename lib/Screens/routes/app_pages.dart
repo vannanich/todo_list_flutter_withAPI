@@ -2,6 +2,7 @@ import 'package:dio_todo_llist/Screens/add_tasks/add_tasks_view.dart';
 import 'package:dio_todo_llist/Screens/homescreen_todo_list/homescreen_todo_list_view.dart';
 import 'package:dio_todo_llist/Screens/login_screen_todo_list/login_screen_todo_list_view.dart';
 import 'package:dio_todo_llist/Screens/register_todo_list/register_todo_list_view.dart';
+import 'package:dio_todo_llist/Screens/setting/setting_view.dart';
 import 'package:dio_todo_llist/Screens/task_detail/task_detail_view.dart';
 import 'package:get/get.dart';
 
@@ -33,6 +34,11 @@ class AppPages {
       name: AppRoutes.detailTask,
       page: () => TaskDetailView(),
       binding: TaskDetailBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.setting,
+      page: () => SettingView(),
+      binding: SettingBinding(),
     ),
   ];
 }

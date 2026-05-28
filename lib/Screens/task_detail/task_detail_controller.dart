@@ -11,7 +11,6 @@ class TaskDetailController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // receive task object passed from home screen
     task = Map<String, dynamic>.from(Get.arguments);
   }
 
@@ -78,13 +77,13 @@ class TaskDetailController extends GetxController {
               ),
             ),
             onPressed: () async {
-              Get.back(); // close dialog
+              Get.back(); 
               try {
                 isDeleting.value = true;
                 var response = await taskService.deleteTask(id: task["id"]);
                 if (response["result"] == true) {
                   Get.snackbar("Success", "Task deleted");
-                  Get.back(); // go back to home
+                  Get.back(); 
                 }
                 isDeleting.value = false;
               } catch (e) {

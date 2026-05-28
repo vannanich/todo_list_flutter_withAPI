@@ -16,7 +16,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
     return Scaffold(
       backgroundColor: Color(0xffF5F5F5),
 
-      // ── AppBar ──
       appBar: AppBar(
         backgroundColor: Color(0xffF5F5F5),
         elevation: 0,
@@ -65,7 +64,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
           children: [
             SizedBox(height: 16),
 
-            // ── Priority Badge ──
             Container(
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
@@ -84,7 +82,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
 
             SizedBox(height: 16),
 
-            // ── Task Name ──
             Text(
               (controller.task["name"] ?? "").toUpperCase(),
               style: GoogleFonts.spaceGrotesk(
@@ -97,7 +94,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
 
             SizedBox(height: 12),
 
-            // ── Description ──
             Text(
               controller.task["description"] ?? "",
               style: GoogleFonts.spaceGrotesk(
@@ -108,8 +104,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
             ),
 
             SizedBox(height: 20),
-
-            // ── Status ──
             Row(
               children: [
                 Container(
@@ -140,12 +134,10 @@ class TaskDetailView extends GetView<TaskDetailController> {
 
             SizedBox(height: 24),
 
-            // ── Divider ──
             Divider(color: Colors.black12),
 
             SizedBox(height: 16),
 
-            // ── Start Date ──
             _dateRow(
               label: "Start Date",
               value: controller.formattedDate(controller.task["created_at"]),
@@ -153,7 +145,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
 
             SizedBox(height: 16),
 
-            // ── Due Date ──
             _dateRow(
               label: "Due Date",
               value: controller.task["due_date"] != null
@@ -163,12 +154,11 @@ class TaskDetailView extends GetView<TaskDetailController> {
 
             Spacer(),
 
-            // ── Bottom Buttons ──
             Padding(
               padding: const EdgeInsets.only(bottom: 24),
               child: Row(
                 children: [
-                  // ── Edit Task ──
+                  
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -200,7 +190,6 @@ class TaskDetailView extends GetView<TaskDetailController> {
 
                   SizedBox(width: 12),
 
-                  // ── Mark as Done ──
                   Expanded(
                     child: GestureDetector(
                       onTap: () => controller.toggleMarkComplete(),

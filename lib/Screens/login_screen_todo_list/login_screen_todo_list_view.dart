@@ -25,7 +25,6 @@ class LoginScreenTodoListView
               children: [
                  SizedBox(height: 24),
 
-                // Logo
                 Container(
                   width: 36,
                   height: 36,
@@ -124,7 +123,6 @@ class LoginScreenTodoListView
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                          // Arrow icon on the right
                           if (!controller.isLoading.value)
                             Positioned(
                               right: 8,
@@ -167,7 +165,6 @@ class LoginScreenTodoListView
 
                  SizedBox(height: 16),
 
-                // Google button
                 Container(
                   width: double.infinity,
                   height: 56,
@@ -202,7 +199,6 @@ class LoginScreenTodoListView
 
                  SizedBox(height: 32),
 
-                // Sign up row
                 Center(
                   child: RichText(
                     text: TextSpan(
@@ -229,7 +225,6 @@ class LoginScreenTodoListView
 
                  SizedBox(height: 16),
 
-                // Terms
                 Center(
                   child: RichText(
                     textAlign: TextAlign.center,

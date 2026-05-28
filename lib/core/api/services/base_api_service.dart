@@ -1,35 +1,3 @@
-// import 'package:dio/dio.dart';
-// import 'package:dio_todo_llist/core/api/api_config.dart';
-// import 'package:flutter/widgets.dart';
-
-// class BaseApiService {
-//   final ApiConfig apiConfig = ApiConfig();
-
-//   Future<dynamic> post({
-//     required String endpoint,
-//     required Map<String, dynamic> data,
-//   }) async {
-//     try {
-//       var respone = await apiConfig.dio.post(endpoint, data: data);
-//       return respone.data;
-//     } on DioException catch (e) {
-//       // debugPrint("error : ${e.toString()}");
-//       debugPrint("error : ${e.message}");
-//     }
-//   }
-
-//   Future<dynamic> get({
-//     required String endpoint,
-//     Map<String, dynamic>? queryParameters,
-//   }) async {
-//     try {
-//       var respone = await apiConfig.dio.get(endpoint);
-//       return respone.data;
-//     } on DioException catch (e) {
-//       debugPrint("Error ${e.toString()}");
-//     }
-//   }
-// }
 import 'package:dio/dio.dart';
 import 'package:dio_todo_llist/core/api/api_config.dart';
 import 'package:flutter/widgets.dart';
