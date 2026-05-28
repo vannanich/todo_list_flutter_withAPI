@@ -56,7 +56,13 @@ class SettingView extends GetView<SettingController> {
                             children: [
                               CircleAvatar(
                                 radius: 48,
-                                backgroundImage: NetworkImage(controller.user.avatar),
+                                backgroundImage: controller.user.value.avatar.isNotEmpty
+                                  ? NetworkImage(controller.user.value.avatar)
+                                  : null,
+                              child: controller.user.value.avatar.isEmpty
+                                  ? Icon(Icons.person, color: Colors.black54)
+                                  : null,
+                                // backgroundImage: NetworkImage(controller.user.avatar),
                               ),
                               Positioned(
                                 bottom: 0,
@@ -76,7 +82,8 @@ class SettingView extends GetView<SettingController> {
                           ),
                           SizedBox(height: 12),
                           Text(
-                            controller.user.name.toUpperCase(),
+                            // controller.user.name.toUpperCase(),
+                            controller.user.value.name.toUpperCase(),
                             style: GoogleFonts.spaceGrotesk(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
@@ -84,7 +91,8 @@ class SettingView extends GetView<SettingController> {
                             ),
                           ),
                           Text(
-                            controller.user.email,
+                            controller.user.value.email,
+                            // controller.user.email,
                             style: GoogleFonts.spaceGrotesk(
                               fontSize: 13,
                               color: Colors.black45,

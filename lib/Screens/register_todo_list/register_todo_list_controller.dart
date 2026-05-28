@@ -1,4 +1,8 @@
-part of 'register_todo_list_view.dart';
+import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
+import 'package:dio_todo_llist/core/api/auth_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
 
 class RegisterTodoListViewController extends GetxController {
   var refnCtrl = TextEditingController();
@@ -7,6 +11,15 @@ class RegisterTodoListViewController extends GetxController {
   var reConfirmPassCtrl = TextEditingController();
   var isLoading = false.obs;
   var authService = AuthService();
+
+  @override
+  void onClose() {
+    refnCtrl.dispose();
+    reEmailCtrl.dispose();
+    rePassCtrl.dispose();
+    reConfirmPassCtrl.dispose();
+    super.onClose();
+  }
 
   
 

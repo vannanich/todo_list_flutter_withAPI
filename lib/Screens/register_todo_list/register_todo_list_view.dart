@@ -1,12 +1,11 @@
+import 'package:dio_todo_llist/Screens/register_todo_list/register_todo_list_controller.dart';
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
-import 'package:dio_todo_llist/core/api/auth_service.dart';
 import 'package:dio_todo_llist/widgets/textFields/custom_textFields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
 part 'register_todo_list_binding.dart';
-part 'register_todo_list_controller.dart';
 
 class RegisterTodoListView extends GetView<RegisterTodoListViewController>{
    RegisterTodoListView({super.key});

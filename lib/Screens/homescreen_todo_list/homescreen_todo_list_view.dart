@@ -235,9 +235,13 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
         ? SizedBox(
             height: 120,
             child: Center(
-              child: Text(
-                "No Task!",
-                style: GoogleFonts.spaceGrotesk(color: Colors.black38, fontSize: 15),
+              child: Column(
+                children: [
+                  Text(
+                    "No Task!",
+                    style: GoogleFonts.spaceGrotesk(color: Colors.black38, fontSize: 15),
+                  ),
+                ],
               ),
             ),
           )
@@ -429,19 +433,32 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
       children: [
         CircleAvatar(
           radius: 22,
-          backgroundImage: NetworkImage(controller.user.avatar),
+          backgroundImage: controller.user.value.avatar.isNotEmpty
+              ? NetworkImage(controller.user.value.avatar)
+              : null,
+          child: controller.user.value.avatar.isEmpty
+              ? Icon(Icons.person, color: Colors.black54)
+              : null,
         ),
+        // CircleAvatar(
+        //   radius: 22,
+        //   backgroundImage: NetworkImage(controller.user.value.avatar),
+
+        //   // backgroundImage: NetworkImage(controller.user.avatar),
+        // ),
         SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              controller.user.name.toUpperCase(),
+              // controller.user.name.toUpperCase(),
+              controller.user.value.name.toUpperCase(),
               style: GoogleFonts.spaceGrotesk(
                   fontSize: 14, fontWeight: FontWeight.w700, height: 1.2),
             ),
             Text(
-              controller.user.email,
+              // controller.user.email,
+              controller.user.value.email,
               style: GoogleFonts.spaceGrotesk(
                   fontSize: 12, color: Colors.black45, height: 1.2),
             ),
