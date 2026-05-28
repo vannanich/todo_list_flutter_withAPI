@@ -4,6 +4,6 @@ class LoginScreenTodoListViewBinding extends Bindings {
 
    @override
    void dependencies() {
-       Get.lazyPut(() => LoginScreenTodoListViewController());
+       Get.lazyPut(() => LoginScreenTodoListViewController(),fenix: true);
    }
 }

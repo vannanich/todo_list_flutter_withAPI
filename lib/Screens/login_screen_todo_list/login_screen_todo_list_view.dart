@@ -10,8 +10,7 @@ part 'login_screen_todo_list_binding.dart';
 part 'login_screen_todo_list_controller.dart';
 
 class LoginScreenTodoListView
-    extends GetView<LoginScreenTodoListViewController> {
-   LoginScreenTodoListView({super.key});
+    extends GetView<LoginScreenTodoListViewController> {LoginScreenTodoListView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class LoginScreenTodoListView
                   "SIGN IN",
                   style: GoogleFonts.nunito(
                     fontSize: 42,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
@@ -99,7 +98,7 @@ class LoginScreenTodoListView
                   ],
                 ),
 
-                 SizedBox(height: 24),
+                 SizedBox(height: 54),
 
                 GestureDetector(
                   onTap: () => controller.login(),
@@ -110,6 +109,7 @@ class LoginScreenTodoListView
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(30),
                     ),
+                    
                     child: Obx(
                       () => Stack(
                         alignment: Alignment.center,
@@ -149,7 +149,7 @@ class LoginScreenTodoListView
                   ),
                 ),
 
-                 SizedBox(height: 150),
+                 SizedBox(height: 100),
 
                 Row(
                   children: [

@@ -4,4 +4,5 @@ abstract class AppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const addTask = '/add-task';
+  static const detailTask = '/detail_task';
 }

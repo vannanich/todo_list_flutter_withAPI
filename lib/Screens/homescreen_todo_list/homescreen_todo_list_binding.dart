@@ -6,6 +6,6 @@ class HomeScreenViewBinding extends Bindings {
 
    @override
    void dependencies() {
-       Get.lazyPut(() => HomescreenTodoListController());
+       Get.lazyPut(() => HomescreenTodoListController(),);
    }
 }

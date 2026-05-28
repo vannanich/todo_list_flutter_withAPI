@@ -39,7 +39,7 @@ class RegisterTodoListView extends GetView<RegisterTodoListViewController>{
                   "SIGN UP",
                   style: TextStyle(
                     fontSize: 32,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w500,
                     letterSpacing: 1.2,
                     color: Colors.black,
                   ),
@@ -63,12 +63,14 @@ class RegisterTodoListView extends GetView<RegisterTodoListViewController>{
                 ),
                  SizedBox(height: 12),
                 CustomTextField(
+                  suffixIcon: Icons.visibility,
                   controller: controller.rePassCtrl,
                   hintText: "Enter your password",
                   // suffix: Icons.visibility,
                 ),
                  SizedBox(height: 12),
                 CustomTextField(
+                  suffixIcon: Icons.visibility,
                   controller: controller.reConfirmPassCtrl,
                   hintText: "Confirm password",
                   // suffix: Icons.visibility,
@@ -185,12 +187,12 @@ class RegisterTodoListView extends GetView<RegisterTodoListViewController>{
                     text: TextSpan(
                       style:  TextStyle(fontSize: 13, color: Colors.black54),
                       children: [
-                         TextSpan(text: "Don't have an account? "),
+                         TextSpan(text: "Really have account ? "),
                         WidgetSpan(
                           child: GestureDetector(
                             onTap: () => Get.toNamed(AppRoutes.login),
                             child:  Text(
-                              "Sign Up",
+                              "Sign In",
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.blue,

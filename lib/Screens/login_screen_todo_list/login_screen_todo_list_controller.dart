@@ -15,6 +15,7 @@ class LoginScreenTodoListViewController extends GetxController {
     super.onInit();
     _loadSavedCredentials();
   }
+  
 
   void _loadSavedCredentials() {
     final savedEmail = box.read("saved_email") ?? "";

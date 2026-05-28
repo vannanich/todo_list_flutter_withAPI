@@ -8,6 +8,8 @@ class RegisterTodoListViewController extends GetxController {
   var isLoading = false.obs;
   var authService = AuthService();
 
+  
+
   void register() async {
     try {
       isLoading.value = true;

@@ -17,7 +17,6 @@ class MainApp extends StatefulWidget {
   @override
   State<MainApp> createState() => _MainAppState();
 }
-
 class _MainAppState extends State<MainApp> {
   
   var box = GetStorage();
@@ -30,7 +29,6 @@ class _MainAppState extends State<MainApp> {
 
     debugPrint("token : $token");
   }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -42,7 +40,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,    
-      initialRoute: token != null ? AppRoutes.login : AppRoutes.login,
+      initialRoute: token != null ? AppRoutes.home : AppRoutes.login,
       getPages: AppPages.routes,
     );
   }

@@ -5,12 +5,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool isMultiline;
   final FocusNode? focusNode;
+  final IconData? suffixIcon;
   const CustomTextField({
     super.key,
     required this.hintText,
     required this.controller,
     this.isMultiline = false,
     this.focusNode,
+     this.suffixIcon,
   });
 
   @override
@@ -23,7 +25,8 @@ class CustomTextField extends StatelessWidget {
         filled: true,
         fillColor: Colors.grey[200],
         hintText: hintText,
-        border: OutlineInputBorder(borderRadius: .circular(20)),
+        suffixIcon: Icon(suffixIcon),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
