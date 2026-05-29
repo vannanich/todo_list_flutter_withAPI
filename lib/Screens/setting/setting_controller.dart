@@ -7,7 +7,6 @@ class SettingController extends GetxController {
   var isLoading = false.obs;
   var isUpdating = false.obs;
 
-  // ── FIX: initialize with empty user instead of late ──
   var user = UserModel(id: "", name: "", avatar: "", email: "").obs;
 
   @override
@@ -16,7 +15,6 @@ class SettingController extends GetxController {
     getProfile();
   }
 
-  // ── FIX: wrap in try/catch + null check ──
   void getProfile() async {
     try {
       isLoading.value = true;
@@ -31,7 +29,6 @@ class SettingController extends GetxController {
     }
   }
 
-  // ── KEPT EXACTLY THE SAME ──
   void logout() {
     Get.dialog(
       AlertDialog(
@@ -65,7 +62,6 @@ class SettingController extends GetxController {
     );
   }
 
-  // ── KEPT EXACTLY THE SAME ──
   void showChangeNameDialog() {
     final nameCtrl = TextEditingController(text: user.value.name);
     Get.dialog(
@@ -141,7 +137,6 @@ class SettingController extends GetxController {
     );
   }
 
-  // ── FIX: added currentPassCtrl field + validation ──
   void showChangeEmailDialog() {
     final emailCtrl = TextEditingController(text: user.value.email);
     final currentPassCtrl = TextEditingController(); // ✅ ADD THIS
@@ -200,7 +195,6 @@ class SettingController extends GetxController {
               onPressed: isUpdating.value
                   ? null
                   : () async {
-                      // ✅ proper validation
                       if (currentPassCtrl.text.isEmpty) {
                         Get.snackbar("Failed", "Current password cannot be empty");
                         return;
@@ -250,7 +244,6 @@ class SettingController extends GetxController {
     );
   }
 
-  // ── KEPT EXACTLY THE SAME ──
   void showChangePasswordDialog() {
     final passCtrl = TextEditingController();
     final confirmCtrl = TextEditingController();

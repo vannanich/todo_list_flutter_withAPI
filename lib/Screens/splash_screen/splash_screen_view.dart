@@ -91,17 +91,18 @@ class _SplashScreenState extends State<SplashScreen>
   await Future.delayed(Duration(milliseconds: 400));
   _taglineController.forward();
 
-  await Future.delayed(Duration(milliseconds: 3000)); // ✅ stay 3 seconds longer
+  await Future.delayed(Duration(milliseconds: 3000)); 
   _navigate();
 }
 
   void _navigate() {
     final box = GetStorage();
     final token = box.read("token");
+    debugPrint("token on splash: $token"); 
     if (token != null && token.toString().isNotEmpty) {
-      Get.offAllNamed(AppRoutes.home);
+      Get.offAllNamed(AppRoutes.home); 
     } else {
-      Get.offAllNamed(AppRoutes.login);
+      Get.offAllNamed(AppRoutes.login); 
     }
   }
 
