@@ -13,21 +13,22 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
           child: Container(
             margin: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+            decoration: BoxDecoration( 
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.arrow_back, color: Colors.black, size: 20),
+            child: Icon(Icons.arrow_back, color: cs.onSurface, size: 20), 
           ),
         ),
         title: Text(
@@ -35,7 +36,7 @@ class AddTasksView extends GetView<AddTasksViewController> {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: cs.onSurface,
           ),
         ),
       ),
@@ -53,7 +54,7 @@ class AddTasksView extends GetView<AddTasksViewController> {
                 fontSize: 40,
                 fontWeight: FontWeight.w800,
                 height: 1.0,
-                color: Colors.black,
+                color: cs.onSurface, 
               ),
             ),
             SizedBox(height: 4),
@@ -61,24 +62,25 @@ class AddTasksView extends GetView<AddTasksViewController> {
               "Turn Khmer documents, images, and PDFs into\neditable text instantly.",
               style: GoogleFonts.spaceGrotesk(
                 fontSize: 12,
-                color: Colors.black45,
+                color: cs.onSurface.withOpacity(0.45), 
                 height: 1.4,
               ),
             ),
 
             SizedBox(height: 24),
 
-            _label("Title"),
+            _label("Title", context),
             SizedBox(height: 8),
             CustomTextField(
               hintText: "Enter your task title",
               controller: controller.nameCtrl,
               focusNode: controller.nameFocus,
+              // textStyle: TextStyle(color: Colors.black),
             ),
 
             SizedBox(height: 16),
 
-            _label("Description"),
+            _label("Description", context),
             SizedBox(height: 8),
             CustomTextField(
               hintText: "Enter your task description ...",
@@ -88,10 +90,11 @@ class AddTasksView extends GetView<AddTasksViewController> {
 
             SizedBox(height: 16),
 
-            _label("Priority"),
+            _label("Priority", context),
             SizedBox(height: 8),
             Obx(
               () => _dropdownField(
+                context: context,
                 value: controller.selectedPriority.value.isEmpty
                     ? null
                     : controller.selectedPriority.value,
@@ -111,10 +114,11 @@ class AddTasksView extends GetView<AddTasksViewController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label("Start Date"),
+                      _label("Start Date", context),
                       SizedBox(height: 8),
                       Obx(
                         () => _dateField(
+                          context: context,
                           value: controller.formattedStartDate,
                           onTap: () => controller.pickStartDate(context),
                         ),
@@ -127,10 +131,11 @@ class AddTasksView extends GetView<AddTasksViewController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label("Due Date"),
+                      _label("Due Date", context),
                       SizedBox(height: 8),
                       Obx(
                         () => _dateField(
+                          context: context,
                           value: controller.formattedDueDate,
                           onTap: () => controller.pickDueDate(context),
                         ),
@@ -154,7 +159,7 @@ class AddTasksView extends GetView<AddTasksViewController> {
                 height: 56,
                 margin: EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: cs.onSurface, 
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Stack(
@@ -162,12 +167,12 @@ class AddTasksView extends GetView<AddTasksViewController> {
                   children: [
                     Obx(
                       () => controller.isLoading.value
-                          ? CircularProgressIndicator(color: Colors.white)
+                          ? CircularProgressIndicator(color: cs.surface) 
                           : Text(
                               controller.argument != null ? "Update Task" : "Add Task",
                               style: GoogleFonts.spaceGrotesk(
                                 fontSize: 16,
-                                color: Colors.white,
+                                color: cs.surface, 
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -180,12 +185,12 @@ class AddTasksView extends GetView<AddTasksViewController> {
                                 width: 40,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: cs.surface, 
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Icon(
                                   Icons.arrow_outward,
-                                  color: Colors.black,
+                                  color: cs.onSurface, 
                                   size: 18,
                                 ),
                               ),
@@ -202,42 +207,48 @@ class AddTasksView extends GetView<AddTasksViewController> {
     );
   }
 
-  Widget _label(String text) {
+  Widget _label(String text, BuildContext context) {
     return Text(
       text,
       style: GoogleFonts.spaceGrotesk(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: Colors.black,
+        color: Theme.of(context).colorScheme.onSurface, 
       ),
     );
   }
 
   Widget _dropdownField({
+    required BuildContext context,
     required String? value,
     required String hint,
     required List<String> items,
     required Function(String?) onChanged,
   }) {
+    final cs = Theme.of(context).colorScheme;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: cs.surface, 
         borderRadius: BorderRadius.circular(16),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
+          dropdownColor: Theme.of(context).cardColor, 
           hint: Text(
             hint,
             style: GoogleFonts.spaceGrotesk(
               fontSize: 14,
-              color: Colors.black45,
+              color: cs.onSurface.withOpacity(0.45), 
             ),
           ),
           isExpanded: true,
-          icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black54),
-          style: GoogleFonts.spaceGrotesk(fontSize: 14, color: Colors.black),
+          icon: Icon(Icons.keyboard_arrow_down_rounded,
+              color: cs.onSurface.withOpacity(0.5)), 
+          style: GoogleFonts.spaceGrotesk(
+              fontSize: 14, color: cs.onSurface), 
           items: items.map((item) {
             return DropdownMenuItem(
               value: item,
@@ -250,13 +261,20 @@ class AddTasksView extends GetView<AddTasksViewController> {
     );
   }
 
-  Widget _dateField({required String value, required VoidCallback onTap}) {
+  Widget _dateField({
+    required BuildContext context, 
+    required String value,
+    required VoidCallback onTap,
+  }) {
+    final cs = Theme.of(context).colorScheme;
+    final isPlaceholder = value == "Optional" || value == "Select date";
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: cs.surface, 
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -267,15 +285,16 @@ class AddTasksView extends GetView<AddTasksViewController> {
                 value,
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 13,
-                  color: value == "Optional" || value == "Select date"
-                      ? Colors.black45
-                      : Colors.black,
+                  color: isPlaceholder
+                      ? cs.onSurface.withOpacity(0.45)
+                      : cs.onSurface,
                   fontWeight: FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black54, size: 20),
+            Icon(Icons.keyboard_arrow_down_rounded,
+                color: cs.onSurface.withOpacity(0.5), size: 20), 
           ],
         ),
       ),

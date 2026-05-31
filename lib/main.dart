@@ -48,12 +48,14 @@
 
 import 'package:dio_todo_llist/Screens/routes/app_pages.dart';
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
+import 'package:dio_todo_llist/core/api/theme/theme_color/theme_color_controller.dart';
+import 'package:dio_todo_llist/core/app_theme/app_theme_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
 void main() async {
   await GetStorage.init();
+  Get.put(ThemeColorController());
   runApp(const MainApp());
 }
 
@@ -62,10 +64,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.splashScreen,
-      getPages: AppPages.routes,
+    return Obx(
+      () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: AppRoutes.splashScreen,
+        getPages: AppPages.routes,
+        theme: AppTheme.light,        
+        darkTheme: AppTheme.dark,      
+        themeMode: ThemeColorController.to.themeMode.value,
+      ),
     );
   }
 }
