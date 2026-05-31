@@ -1,5 +1,7 @@
 import 'package:dio_todo_llist/Screens/routes/app_routes.dart';
 import 'package:dio_todo_llist/core/api/auth_service.dart';
+import 'package:dio_todo_llist/core/api/theme/theme_color/theme_color_controller.dart';
+import 'package:dio_todo_llist/main.dart';
 import 'package:dio_todo_llist/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,19 +17,28 @@ class SettingView extends GetView<SettingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
           child: Container(
             margin: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              // color: Colors.grey.shade100,
+              color: Theme.of(context).colorScheme.surface,
+
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.arrow_back, color: Colors.black, size: 20),
+            // child: Icon(Icons.arrow_back, color: Colors.black, size: 20),
+            child: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface, size: 20),
+
           ),
         ),
         title: Text(
@@ -35,7 +46,9 @@ class SettingView extends GetView<SettingController> {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            // color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
+
           ),
         ),
       ),
@@ -71,7 +84,9 @@ class SettingView extends GetView<SettingController> {
                                   width: 28,
                                   height: 28,
                                   decoration: BoxDecoration(
-                                    color: Colors.black,
+                                    // color: Colors.black,
+                                    color: Theme.of(context).colorScheme.onSurface,
+
                                     shape: BoxShape.circle,
                                     border: Border.all(color: Colors.white, width: 2),
                                   ),
@@ -87,7 +102,7 @@ class SettingView extends GetView<SettingController> {
                             style: GoogleFonts.spaceGrotesk(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
-                              color: Colors.black,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           Text(
@@ -95,7 +110,9 @@ class SettingView extends GetView<SettingController> {
                             // controller.user.email,
                             style: GoogleFonts.spaceGrotesk(
                               fontSize: 13,
-                              color: Colors.black45,
+                              // color: Colors.black45,
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+
                             ),
                           ),
                         ],
@@ -103,9 +120,10 @@ class SettingView extends GetView<SettingController> {
                     ),
 
                     SizedBox(height: 32),
-                    _sectionLabel("PERSONAL INFORMATION"),
+                    _sectionLabel("PERSONAL INFORMATION",context),
                     SizedBox(height: 8),
                     _settingItem(
+                      context: context,
                       icon: Icons.person_outline,
                       title: "Change Name",
                       subtitle: "Change your full name",
@@ -113,6 +131,7 @@ class SettingView extends GetView<SettingController> {
                     ),
                     _divider(),
                     _settingItem(
+                      context: context,
                       icon: Icons.email_outlined,
                       title: "Change Email",
                       subtitle: "Change your email address",
@@ -120,6 +139,7 @@ class SettingView extends GetView<SettingController> {
                     ),
                     _divider(),
                     _settingItem(
+                      context: context,
                       icon: Icons.lock_outline,
                       title: "Change Password",
                       subtitle: "Change your password",
@@ -128,16 +148,78 @@ class SettingView extends GetView<SettingController> {
 
                     SizedBox(height: 24),
 
-                    _sectionLabel("GENERAL"),
+                    _sectionLabel("GENERAL",context),
                     SizedBox(height: 8),
-                    _settingItem(
-                      icon: Icons.dark_mode_outlined,
-                      title: "Dark Theme",
-                      subtitle: "Change your full name",
-                      onTap: () {},
-                    ),
+                    // _settingItem(
+                    //   icon: Icons.dark_mode_outlined,
+                    //   title: "Dark Theme",
+                    //   subtitle: "Change your full name",
+                    //   // onTap: () {},
+                    //   onTap: () => ThemeColorController.to.toggleTheme(),
+                    // ),
+                    Obx(
+                        () => GestureDetector(
+                          onTap: () => ThemeColorController.to.toggleTheme(),
+                          behavior: HitTestBehavior.opaque,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  ThemeColorController.to.isDark
+                                      ? Icons.dark_mode
+                                      : Icons.light_mode,
+                                  size: 22,
+                                  // color: Colors.black54,
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+
+                                ),
+                                SizedBox(width: 16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      ThemeColorController.to.isDark
+                                          ? "Dark Theme"
+                                          : "Light Theme",
+                                      style: GoogleFonts.spaceGrotesk(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        // color: Colors.black,
+                                        color: Theme.of(context).colorScheme.onSurface,
+
+                                      ),
+                                    ),
+                                    Text(
+                                      ThemeColorController.to.isDark
+                                          ? "Switch to light mode"
+                                          : "Switch to dark mode",
+                                      style: GoogleFonts.spaceGrotesk(
+                                        fontSize: 12,
+                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+
+                                        // color: Colors.black45,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                Switch(
+                                  value: ThemeColorController.to.isDark,
+                                  onChanged: (_) => ThemeColorController.to.toggleTheme(),
+                                  activeColor: Colors.black,
+                                  activeTrackColor: Colors.black38,
+                                  inactiveThumbColor: Colors.grey,
+                                  inactiveTrackColor: Colors.grey.shade300,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     _divider(),
                     _settingItem(
+                      context: context,
                       icon: Icons.language_outlined,
                       title: "Language",
                       subtitle: "Change your email address",
@@ -145,6 +227,7 @@ class SettingView extends GetView<SettingController> {
                     ),
                     _divider(),
                     _settingItem(
+                      context: context,
                       icon: Icons.help_outline,
                       title: "FAQ",
                       subtitle: "Change your password",
@@ -153,9 +236,10 @@ class SettingView extends GetView<SettingController> {
 
                     SizedBox(height: 24),
 
-                    _sectionLabel("LEGAL"),
+                    _sectionLabel("LEGAL",context),
                     SizedBox(height: 8),
                     _settingItem(
+                      context: context,
                       icon: Icons.privacy_tip_outlined,
                       title: "Data Privacy",
                       subtitle: "Change your full name",
@@ -163,6 +247,7 @@ class SettingView extends GetView<SettingController> {
                     ),
                     _divider(),
                     _settingItem(
+                      context: context,
                       icon: Icons.description_outlined,
                       title: "Term & Condition",
                       subtitle: "Change your email address",
@@ -170,6 +255,7 @@ class SettingView extends GetView<SettingController> {
                     ),
                     SizedBox(height: 24),
                     _settingItem(
+                      context: context,
                       icon: Icons.logout,
                       title: "Logout",
                       subtitle: "Change your full name",
@@ -185,13 +271,16 @@ class SettingView extends GetView<SettingController> {
     );
   }
 
-  Widget _sectionLabel(String label) {
+  // Widget _sectionLabel(String label) {
+  Widget _sectionLabel(String label, BuildContext context) {
     return Text(
       label,
       style: GoogleFonts.spaceGrotesk(
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        color: Colors.black54,
+        // color: Colors.black54
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+
         letterSpacing: 1.1,
       ),
     );
@@ -201,13 +290,14 @@ class SettingView extends GetView<SettingController> {
     return Divider(height: 1, color: Colors.black12, indent: 48);
   }
 
-  Widget _settingItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    bool isRed = false,
-  }) {
+ Widget _settingItem({
+  required BuildContext context, 
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required VoidCallback onTap,
+  bool isRed = false,
+}) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -218,7 +308,9 @@ class SettingView extends GetView<SettingController> {
             Icon(
               icon,
               size: 22,
-              color: isRed ? Colors.red : Colors.black54,
+              color: isRed ? Colors.red : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+
+              // color: isRed ? Colors.red : Colors.black54,
             ),
             SizedBox(width: 16),
             Column(
@@ -229,14 +321,17 @@ class SettingView extends GetView<SettingController> {
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: isRed ? Colors.red : Colors.black,
+                    color: isRed ? Colors.red : Theme.of(context).colorScheme.onSurface,
+
+                    // color: isRed ? Colors.red : Colors.black,
                   ),
                 ),
                 Text(
                   subtitle,
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 12,
-                    color: isRed ? Colors.red.shade200 : Colors.black45,
+                    // color: isRed ? Colors.red.shade200 : Colors.black45,
+                    color: isRed ? Colors.red.shade200 : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                   ),
                 ),
               ],

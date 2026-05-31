@@ -18,15 +18,17 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor, 
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.toNamed(AppRoutes.addTask)!.then((value) {
-            controller.getTasks();
-          });
+          Get.toNamed(AppRoutes.addTask)!.then((_) => controller.getTasks());
         },
+        backgroundColor: cs.onSurface,          
+        foregroundColor: cs.surface,
         child: Icon(Icons.add),
       ),
 
@@ -49,7 +51,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                     child: Obx(
                       () => controller.isLoading.value
                           ? _buildProfilePlaceholder()
-                          : _buildProfileHeader(),
+                          : _buildProfileHeader(context),
                     ),
                   ),
 
@@ -61,7 +63,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                         fontSize: 52,
                         fontWeight: FontWeight.w800,
                         height: 1.0,
-                        color: Colors.black,
+                        color: cs.onSurface, 
                       ),
                     ),
                   ),
@@ -88,18 +90,32 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Today's $dayName",
-                                  style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w600)),
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: cs.onSurface,
+                                  )),
                               Text(dateStr,
-                                  style: GoogleFonts.spaceGrotesk(fontSize: 12, color: Colors.black54)),
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 12,
+                                    color: cs.onSurface.withOpacity(0.5), 
+                                  )),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text("$percent% Done",
-                                  style: GoogleFonts.spaceGrotesk(fontSize: 13, fontWeight: FontWeight.w700)),
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: cs.onSurface, 
+                                  )),
                               Text("Completed Tasks",
-                                  style: GoogleFonts.spaceGrotesk(fontSize: 12, color: Colors.black54)),
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 12,
+                                    color: cs.onSurface.withOpacity(0.5), 
+                                  )),
                             ],
                           ),
                         ],
@@ -111,7 +127,7 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: _buildTabBar(),
+                    child: _buildTabBar(context),
                   ),
 
                   SizedBox(height: 16),
@@ -120,16 +136,12 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: ContentSizeTabBarView(
                       children: [
-                        Obx(
-                          () => controller.isLoadTask.value
-                              ? _buildTaskPlaceholder()
-                              : _buildTasksList(tasks: controller.boardTaskList),
-                        ),
-                        Obx(
-                          () => controller.isLoadTask.value
-                              ? _buildTaskPlaceholder()
-                              : _buildTasksList(tasks: controller.doneTaskList),
-                        ),
+                        Obx(() => controller.isLoadTask.value
+                            ? _buildTaskPlaceholder()
+                            : _buildTasksList(tasks: controller.boardTaskList, context: context)),
+                        Obx(() => controller.isLoadTask.value
+                            ? _buildTaskPlaceholder()
+                            : _buildTasksList(tasks: controller.doneTaskList, context: context)),
                       ],
                     ),
                   ),
@@ -144,26 +156,29 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  Widget _buildTabBar() {
+  Widget _buildTabBar(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Obx(
       () => TabBar(
         onTap: (value) {
-          debugPrint("value of tab : $value");
           controller.tabIndex.value = value;
         },
-        labelColor: Colors.black,
+        labelColor: cs.onSurface,                        // ✅ was Colors.black
         overlayColor: WidgetStateProperty.all(Colors.transparent),
         indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(width: 2, color: Colors.black),
+          borderSide: BorderSide(width: 2, color: cs.onSurface), // ✅
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         tabs: [
           tabbarItem(
+            context: context,
             count: controller.boardTaskList.length,
             name: "Tasks",
             isSelected: controller.tabIndex.value == 0,
           ),
           tabbarItem(
+            context: context,
             count: controller.doneTaskList.length,
             name: "Done",
             isSelected: controller.tabIndex.value == 1,
@@ -173,7 +188,14 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  Widget tabbarItem({required int count, required String name, required bool isSelected}) {
+  Widget tabbarItem({
+    required BuildContext context,
+    required int count,
+    required String name,
+    required bool isSelected,
+  }) {
+    final cs = Theme.of(context).colorScheme;
+
     return Tab(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -182,14 +204,14 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black26),
+              border: Border.all(color: cs.onSurface.withOpacity(0.25)), // ✅ was Colors.black26
             ),
             child: Text(
               count.toString().padLeft(2, "0"),
               style: GoogleFonts.spaceGrotesk(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+                color: cs.onSurface, 
               ),
             ),
           ),
@@ -199,13 +221,14 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Colors.black,
+              color: cs.onSurface, 
             ),
           ),
         ],
       ),
     );
   }
+
   Widget _buildTaskPlaceholder() {
     return ListView.builder(
       shrinkWrap: true,
@@ -215,8 +238,8 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Shimmer.fromColors(
-            baseColor: Colors.grey.shade200,
-            highlightColor: Colors.grey.shade100,
+            baseColor: Colors.grey.shade400,      // ✅ slightly darker so visible in dark mode
+            highlightColor: Colors.grey.shade300,
             child: Container(
               height: 160,
               decoration: BoxDecoration(
@@ -230,18 +253,19 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  Widget _buildTasksList({required List<dynamic> tasks}) {
+  Widget _buildTasksList({required List<dynamic> tasks, required BuildContext context}) {
+    final cs = Theme.of(context).colorScheme;
+
     return tasks.isEmpty
         ? SizedBox(
             height: 120,
             child: Center(
-              child: Column(
-                children: [
-                  Text(
-                    "No Task!",
-                    style: GoogleFonts.spaceGrotesk(color: Colors.black38, fontSize: 15),
-                  ),
-                ],
+              child: Text(
+                "No Task!",
+                style: GoogleFonts.spaceGrotesk(
+                  color: cs.onSurface.withOpacity(0.35), 
+                  fontSize: 15,
+                ),
               ),
             ),
           )
@@ -249,71 +273,71 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return _taskCard(index: index, task: tasks);
+              return _taskCard(index: index, task: tasks, context: context);
             },
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 12);
-            },
+            separatorBuilder: (_, __) => SizedBox(height: 12),
             itemCount: tasks.length,
           );
   }
 
-  Widget _taskCard({required int index, required List<dynamic> task}) {
-  return GestureDetector( 
-    onTap: () {
-      Get.toNamed(AppRoutes.detailTask, arguments: task[index])!.then((value) {
-      // Get.toNamed(AppRoutes.detailTask, arguments: task[index])!.then((value) {
-        controller.getTasks(); 
-      });
-    },
-    child: Container(
-      padding: EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _taskStatus(index: index, task: task),
-          SizedBox(height: 14),
-          _taskContent(index: index, task: task),
-          SizedBox(height: 14),
-          _dateNdone(index: index, task: task),
-        ],
-      ),
-    ), 
-  );
-}
+  Widget _taskCard({required int index, required List<dynamic> task, required BuildContext context}) {
+    final cs = Theme.of(context).colorScheme;
 
-  Widget _dateNdone({required int index, required List<dynamic> task}) {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(AppRoutes.detailTask, arguments: task[index])!
+            .then((_) => controller.getTasks());
+      },
+      child: Container(
+        padding: EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,          
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: cs.onSurface.withOpacity(0.1)), 
+          boxShadow: [
+            BoxShadow(
+              color: cs.shadow.withOpacity(0.04),     
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _taskStatus(index: index, task: task, context: context),
+            SizedBox(height: 14),
+            _taskContent(index: index, task: task, context: context),
+            SizedBox(height: 14),
+            _dateNdone(index: index, task: task, context: context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dateNdone({required int index, required List<dynamic> task, required BuildContext context}) {
+    final cs = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Text(
           "Date : ${controller.formattedDateTime(task[index]["created_at"])}",
-          style: GoogleFonts.spaceGrotesk(fontSize: 12, color: Colors.black45),
+          style: GoogleFonts.spaceGrotesk(
+            fontSize: 12,
+            color: cs.onSurface.withOpacity(0.45), 
+          ),
         ),
         Spacer(),
-
         GestureDetector(
-          onTap: () {
-            controller.toggleMarkComplete(id: task[index]["id"]);
-          },
+          onTap: () => controller.toggleMarkComplete(id: task[index]["id"]),
           child: Obx(
             () => Container(
               padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               decoration: BoxDecoration(
-                color: task[index]["completed"] ? Colors.black : Colors.white,
+                color: task[index]["completed"] ? cs.onSurface : Colors.transparent, 
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: Colors.black12),
+                border: Border.all(color: cs.onSurface.withOpacity(0.1)),           
               ),
               child: Center(
                 child: controller.isCompleting.value &&
@@ -323,15 +347,15 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: cs.surface, // ✅
                         ),
                       )
                     : Text(
-                        task[index]["completed"] ? "Done ✓" : "Mark as Done",
+                        task[index]["completed"] ? "Done" : "Mark as Done",
                         style: GoogleFonts.spaceGrotesk(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
-                          color: task[index]["completed"] ? Colors.white : Colors.black,
+                          color: task[index]["completed"] ? cs.surface : cs.onSurface,
                         ),
                       ),
               ),
@@ -342,93 +366,104 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     );
   }
 
-  Widget _taskContent({required int index, required List<dynamic> task}) {
+  Widget _taskContent({required int index, required List<dynamic> task, required BuildContext context}) {
+    final cs = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           task[index]["name"].toUpperCase(),
-          style: GoogleFonts.spaceGrotesk(fontSize: 22, fontWeight: FontWeight.w800),
+          style: GoogleFonts.spaceGrotesk(
+            fontSize: 22,
+            fontWeight: FontWeight.w800,
+            color: cs.onSurface, 
+          ),
         ),
         SizedBox(height: 4),
         Text(
           task[index]["description"],
-          style: GoogleFonts.spaceGrotesk(fontSize: 13, color: Colors.black54),
+          style: GoogleFonts.spaceGrotesk(
+            fontSize: 13,
+            color: cs.onSurface.withOpacity(0.5), 
+          ),
         ),
       ],
     );
   }
 
-  Widget _taskStatus({required int index, required List<dynamic> task}) {
+  Widget _taskStatus({required int index, required List<dynamic> task, required BuildContext context}) {
+    final cs = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Container(
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.transparent,                            
             borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: Colors.black12),
+            border: Border.all(color: cs.onSurface.withOpacity(0.1)), 
           ),
           child: Text(
-            "Hight Priority",
-            style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w600, fontSize: 13),
+            "High Priority",
+            style: GoogleFonts.spaceGrotesk(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: cs.onSurface, 
+            ),
           ),
         ),
         Spacer(),
-
         PopupMenuButton(
           position: PopupMenuPosition.under,
-          color: Colors.white,
+          color: Theme.of(context).cardColor,                     
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                onTap: () {
-                  Get.toNamed(AppRoutes.addTask, arguments: task[index])!.then((value) {
-                    controller.getTasks();
-                  });
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.edit_outlined, size: 18),
-                    SizedBox(width: 10),
-                    Text("Update",
-                        style: GoogleFonts.spaceGrotesk(
-                            color: Colors.black, fontWeight: FontWeight.w600)),
-                  ],
-                ),
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              onTap: () {
+                Get.toNamed(AppRoutes.addTask, arguments: task[index])!
+                    .then((_) => controller.getTasks());
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.edit_outlined, size: 18, color: cs.onSurface),
+                  SizedBox(width: 10),
+                  Text("Update",
+                      style: GoogleFonts.spaceGrotesk(
+                          color: cs.onSurface, fontWeight: FontWeight.w600)),
+                ],
               ),
-              PopupMenuItem(
-                onTap: () {
-                  controller.onDeleteTask(id: task[index]["id"], index: index);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.delete_outline, color: Colors.red, size: 18),
-                    SizedBox(width: 10),
-                    Text("Delete",
-                        style: GoogleFonts.spaceGrotesk(
-                            color: Colors.red, fontWeight: FontWeight.w600)),
-                  ],
-                ),
+            ),
+            PopupMenuItem(
+              onTap: () => controller.onDeleteTask(id: task[index]["id"], index: index),
+              child: Row(
+                children: [
+                  Icon(Icons.delete_outline, color: Colors.red, size: 18),
+                  SizedBox(width: 10),
+                  Text("Delete",
+                      style: GoogleFonts.spaceGrotesk(
+                          color: Colors.red, fontWeight: FontWeight.w600)),
+                ],
               ),
-            ];
-          },
+            ),
+          ],
           child: Container(
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: cs.onSurface.withOpacity(0.06), 
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.more_horiz, size: 18),
+            child: Icon(Icons.more_horiz, size: 18, color: cs.onSurface),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         CircleAvatar(
@@ -437,30 +472,29 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
               ? NetworkImage(controller.user.value.avatar)
               : null,
           child: controller.user.value.avatar.isEmpty
-              ? Icon(Icons.person, color: Colors.black54)
+              ? Icon(Icons.person, color: cs.onSurface.withOpacity(0.5))
               : null,
         ),
-        // CircleAvatar(
-        //   radius: 22,
-        //   backgroundImage: NetworkImage(controller.user.value.avatar),
-
-        //   // backgroundImage: NetworkImage(controller.user.avatar),
-        // ),
         SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              // controller.user.name.toUpperCase(),
               controller.user.value.name.toUpperCase(),
               style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14, fontWeight: FontWeight.w700, height: 1.2),
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                height: 1.2,
+                color: cs.onSurface, 
+              ),
             ),
             Text(
-              // controller.user.email,
               controller.user.value.email,
               style: GoogleFonts.spaceGrotesk(
-                  fontSize: 12, color: Colors.black45, height: 1.2),
+                fontSize: 12,
+                color: cs.onSurface.withOpacity(0.65), 
+                height: 1.2,
+              ),
             ),
           ],
         ),
@@ -469,14 +503,19 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: Colors.grey.shade100,
+            color: cs.onSurface.withOpacity(0.06), 
             shape: BoxShape.circle,
           ),
-          child:GestureDetector(
-            onTap: () {
-              Get.toNamed(AppRoutes.setting);
-            },
-            child: Image(image: AssetImage("assets/Settings.png"),width: 50,height: 30)),
+          child: GestureDetector(
+            onTap: () => Get.toNamed(AppRoutes.setting),
+            child: Image(
+              image: AssetImage("assets/Settings.png"),
+              width: 50,
+              height: 30,
+              color: cs.onSurface,
+              colorBlendMode: BlendMode.srcIn,
+            ),
+          ),
         ),
       ],
     );
@@ -486,8 +525,8 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
     return Row(
       children: [
         Shimmer.fromColors(
-          baseColor: Colors.grey.shade200,
-          highlightColor: Colors.grey.shade100,
+          baseColor: Colors.grey.shade400,
+          highlightColor: Colors.grey.shade300,
           child: CircleAvatar(radius: 22, backgroundColor: Colors.grey),
         ),
         SizedBox(width: 10),
@@ -495,14 +534,14 @@ class HomeScreenView extends GetView<HomescreenTodoListController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Shimmer.fromColors(
-              baseColor: Colors.grey.shade200,
-              highlightColor: Colors.grey.shade100,
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade300,
               child: Container(width: 100, height: 14, color: Colors.grey),
             ),
             SizedBox(height: 5),
             Shimmer.fromColors(
-              baseColor: Colors.grey.shade200,
-              highlightColor: Colors.grey.shade100,
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade300,
               child: Container(width: 140, height: 12, color: Colors.grey),
             ),
           ],
