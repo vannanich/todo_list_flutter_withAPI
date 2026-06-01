@@ -32,7 +32,7 @@
 //         queryParameters: queryParameters,
 //         options: Options(
 //           headers: {
-//             "Authorization": "Bearer $token", // 👈 send token
+//             "Authorization": "Bearer $token", 
 //           },
 //         ),
 //       );
@@ -73,7 +73,6 @@ class BaseApiService {
   final ApiConfig apiConfig = ApiConfig();
   final box = GetStorage();
 
-  // ── FIXED: dynamic → Map<String, dynamic> + cast ──
   Future<Map<String, dynamic>> post({
     required String endpoint,
     required Map<String, dynamic> data,
@@ -87,7 +86,6 @@ class BaseApiService {
     }
   }
 
-  // ── FIXED: dynamic → Map<String, dynamic> + cast ──
   Future<Map<String, dynamic>> get({
     required String endpoint,
     Map<String, dynamic>? queryParameters,
@@ -110,18 +108,16 @@ class BaseApiService {
     }
   }
 
-  // ── FIXED: dynamic → Map<String, dynamic> + cast + return {} on error ──
   Future<Map<String, dynamic>> delete({required String endpoint}) async {
     try {
       var response = await apiConfig.dio.delete(endpoint);
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
       debugPrint("Error: ${e.toString()}");
-      return {}; // ← was missing before
+      return {}; 
     }
   }
 
-  // ── FIXED: dynamic → Map<String, dynamic> + cast + return {} on error ──
   Future<Map<String, dynamic>> put({
     required String endpoint,
     Map<String, dynamic>? data,
@@ -131,7 +127,7 @@ class BaseApiService {
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
       debugPrint("Error: ${e.message}");
-      return {}; // ← was missing before
+      return {}; 
     }
   }
 }

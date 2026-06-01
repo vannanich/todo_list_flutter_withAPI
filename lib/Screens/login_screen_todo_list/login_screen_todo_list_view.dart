@@ -61,6 +61,7 @@ class LoginScreenTodoListView
                 CustomTextField(
                   controller: controller.passCtrl,
                   hintText: "Enter your password",
+                  isPassword: true,
                   // suffix: Icons.visibility,
                 ),
 

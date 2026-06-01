@@ -65,6 +65,7 @@ class RegisterTodoListView extends GetView<RegisterTodoListViewController>{
                   suffixIcon: Icons.visibility,
                   controller: controller.rePassCtrl,
                   hintText: "Enter your password",
+                  isPassword: true,
                   // suffix: Icons.visibility,
                 ),
                  SizedBox(height: 12),
@@ -72,6 +73,7 @@ class RegisterTodoListView extends GetView<RegisterTodoListViewController>{
                   suffixIcon: Icons.visibility,
                   controller: controller.reConfirmPassCtrl,
                   hintText: "Confirm password",
+                  isPassword:true,
                   // suffix: Icons.visibility,
                 ),
 
